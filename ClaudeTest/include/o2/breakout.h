@@ -32,6 +32,8 @@ struct Ball {
 	float velocityX;
 	float velocityY;
 	float speed;
+	// Index into the ball colors. No two balls in play share one.
+	int color;
 };
 
 struct Game {
