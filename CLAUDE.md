@@ -24,6 +24,18 @@ Keep C++ features from spreading. Using one in one place must not force the rest
 - Put C++ usage, including standard library types, inside the `.cpp` file that needs it, behind a C-like interface
 - Headers expose plain structs and functions, not standard library types
 
+## Project layout
+
+Paths are relative to the project folder, `ClaudeTest/`:
+- Header files go in `include/o2/`
+- Implementation files go in `src/o2/`
+- `include/` is on the include path, so include headers as `#include <o2/name.h>`
+- Add new `.cpp` files to `ClaudeTest.vcxproj` so they get compiled
+
+## Namespaces
+
+Everything in these headers and their implementations goes in the `o2` namespace, so the code can be reused in later projects without name conflicts. Nested namespaces are fine, as long as they start with `o2`, such as `o2::math`.
+
 ## Memory
 
 - Use arenas wherever possible
