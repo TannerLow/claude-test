@@ -39,6 +39,8 @@ static const int TITLE_SIZE = 40;
 
 static const Color ROW_COLORS[BRICK_ROWS] = { RED, ORANGE, GOLD, GREEN, SKYBLUE, PURPLE };
 static const Color PADDLE_COLORS[PADDLE_COLOR_COUNT] = { RAYWHITE, RED, ORANGE, YELLOW, GREEN, SKYBLUE, BLUE, MAGENTA };
+// The served ball is always the first color. Balls from the special brick take the others.
+static const Color BALL_COLORS[MAX_BALLS] = { RAYWHITE, YELLOW, LIME, SKYBLUE, MAGENTA, ORANGE, RED, VIOLET };
 
 static bool overlaps(float ax, float ay, float aw, float ah, float bx, float by, float bw, float bh) {
 	return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
@@ -79,6 +81,7 @@ static void setBallAngle(Ball* ball, float angle) {
 static void serveBall(Game* game) {
 	game->ballCount = 1;
 	game->balls[0].speed = BALL_START_SPEED;
+	game->balls[0].color = 0;
 	game->balls[0].velocityX = 0.0f;
 	game->balls[0].velocityY = 0.0f;
 	placeBallOnPaddle(game);
@@ -103,12 +106,30 @@ static void speedUpBall(Ball* ball) {
 	ball->speed = newSpeed;
 }
 
+// Returns the first ball color that no ball in play is using.
+static int unusedBallColor(const Game* game) {
+	for (int color = 0; color < MAX_BALLS; color++) {
+		bool used = false;
+		for (int i = 0; i < game->ballCount; i++) {
+			if (game->balls[i].color == color) {
+				used = true;
+				break;
+			}
+		}
+		if (!used) {
+			return color;
+		}
+	}
+	return 0;
+}
+
 // Adds a ball at the brick's position, heading down and away from the ball that hit it.
 static void spawnBall(Game* game, const Ball* hitter, int row, int column) {
 	if (game->ballCount >= MAX_BALLS) {
 		return;
 	}
 	Ball* ball = &game->balls[game->ballCount];
+	ball->color = unusedBallColor(game);
 	game->ballCount++;
 	ball->x = brickX(column) + (BRICK_WIDTH - BALL_SIZE) / 2.0f;
 	ball->y = brickY(row) + (BRICK_HEIGHT - BALL_SIZE) / 2.0f;
@@ -309,7 +330,7 @@ void draw(const Game* game) {
 	DrawRectangle((int)game->paddleX, (int)PADDLE_Y, (int)PADDLE_WIDTH, (int)PADDLE_HEIGHT, PADDLE_COLORS[game->paddleColor]);
 	if (game->state == STATE_READY || game->state == STATE_PLAYING) {
 		for (int i = 0; i < game->ballCount; i++) {
-			DrawRectangle((int)game->balls[i].x, (int)game->balls[i].y, (int)BALL_SIZE, (int)BALL_SIZE, RAYWHITE);
+			DrawRectangle((int)game->balls[i].x, (int)game->balls[i].y, (int)BALL_SIZE, (int)BALL_SIZE, BALL_COLORS[game->balls[i].color]);
 		}
 	}
 
