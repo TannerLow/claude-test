@@ -14,6 +14,8 @@ int main() {
 		input.rightDown = IsKeyDown(KEY_RIGHT);
 		input.leftPressed = IsKeyPressed(KEY_LEFT);
 		input.rightPressed = IsKeyPressed(KEY_RIGHT);
+		input.upPressed = IsKeyPressed(KEY_UP);
+		input.downPressed = IsKeyPressed(KEY_DOWN);
 		o2::breakout::update(&game, input, GetFrameTime());
 
 		BeginDrawing();

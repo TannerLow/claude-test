@@ -6,7 +6,8 @@ enum {
 	WINDOW_WIDTH = 800,
 	WINDOW_HEIGHT = 600,
 	BRICK_ROWS = 6,
-	BRICK_COLUMNS = 10
+	BRICK_COLUMNS = 10,
+	MAX_BALLS = 8
 };
 
 enum State {
@@ -21,18 +22,30 @@ struct Input {
 	bool rightDown;
 	bool leftPressed;
 	bool rightPressed;
+	bool upPressed;
+	bool downPressed;
+};
+
+struct Ball {
+	float x;
+	float y;
+	float velocityX;
+	float velocityY;
+	float speed;
 };
 
 struct Game {
 	State state;
 	float paddleX;
-	float ballX;
-	float ballY;
-	float ballVelocityX;
-	float ballVelocityY;
-	float ballSpeed;
+	int paddleColor;
+	Ball balls[MAX_BALLS];
+	int ballCount;
 	bool bricks[BRICK_ROWS][BRICK_COLUMNS];
 	int bricksLeft;
+	// Row and column of the special brick, or -1 when there isn't one.
+	int specialRow;
+	int specialColumn;
+	float specialTimer;
 	int score;
 	int lives;
 };
