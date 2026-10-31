@@ -41,3 +41,9 @@ Everything in these headers and their implementations goes in the `o2` namespace
 - Use arenas wherever possible
 - Keep `malloc` to a minimum and in as few places as possible, rather than scattered through the program
 - Treat `new` the same as `malloc`, and remember that standard library containers allocate on their own
+
+## Privacy while testing
+
+- Never capture the desktop or any part of the screen, and never send keyboard or mouse input to other windows
+- Test the game off-screen instead: use simulated input, and a hidden window that renders to a texture when you need to see the result
+- If something can only be checked in the real window, ask me to check it
